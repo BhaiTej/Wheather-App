@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter city name" spellcheck="false">
+            <button><img src="https://png.pngtree.com/recommend-works/png-clipart/20241204/ourmid/pngtree-search-button-game-ui-png-image_14604629.png" alt="" width="50px" height="50px"></button>
+        </div>
+        <div class="error">
+            <p>Invalid city name</p>
+        </div>
+        <div class="weather">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQL6-7Rx1dQunFpDhtgO0G2KWx3dmGPsTiRWUaApgYxk_sr6qFZ3NCTKTD1CzN5vQo1kE&usqp=CAU" alt="" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://www.clipartmax.com/png/middle/285-2859058_humidity-clipart-transparent-humid-icon.png" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://www.clipartmax.com/png/middle/285-2859058_humidity-clipart-transparent-humid-icon.png" alt="">
+                    <div>
+                        <p class="wind">15km/hr</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    const apikey="0feaafbfbac1c56dfcd0a23e8489561b";
+    const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    const searchBox=document.querySelector(".search input ")
+    const searchBtn=document.querySelector(".search button ")
+    const weatherIcon=document.querySelector(".weather-icon")
+    async function checkWeather(city){
+        const response=await fetch(apiurl+ city +`&appid=${apikey}`)
+        if(response.status==404){
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weather").style.display="none";
+        }
+        else{
+            var data=await response.json();
+        // console.log(data)
+        document.querySelector(".city").innerHTML=data.name;
+        document.querySelector(".temp").innerHTML=Math.round(data.main.temp)     + "°c";
+        document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
+        document.querySelector(".wind").innerHTML=data.wind.speed +"km/h";
+        if(data.weather[0].main=="Clouds"){
+              weatherIcon.src="https://www.citypng.com/public/uploads/preview/hd-real-white-grey-clouds-png-704081694963868rrtu2tlbpl.png"
+        }
+        else if(data.weather[0].main=="Clear"){
+              weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSmioeVf6VZ5XKrpt-90qLmQWkwLDN-jioLw&s"
+        }
+        else if(data.weather[0].main=="Rain"){
+              weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQL6-7Rx1dQunFpDhtgO0G2KWx3dmGPsTiRWUaApgYxk_sr6qFZ3NCTKTD1CzN5vQo1kE&usqp=CAU"
+        }
+        else if(data.weather[0].main=="Drizzle"){
+              weatherIcon.src="https://static.vecteezy.com/system/resources/previews/019/061/847/non_2x/windy-drizzle-3d-icon-png.png"
+        }
+        else if(data.weather[0].main=="Mist"){
+              weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiRqrcCbJ7And6lChjgf0sNTfOMdo0Kf9jsQ&s"
+        }
+        document.querySelector(".weather").style.display="block"
+        document.querySelector(".error").style.display="none"
+        }
+        
+          
+    }
+searchBtn.addEventListener("click",()=>{
+    checkWeather(searchBox.value); 
+})
+
+</script>
+
+
+</body>
+</html>
